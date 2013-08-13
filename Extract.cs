@@ -30,7 +30,7 @@ namespace UIK_writer_calc
 
         private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д" };
         private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок" };
-        private static string[] building_prefix = { "д." };
+        private static string[] building_prefix = { "д.", "дом" };
         private static string[] phone_prefix = { "т.", "тел." };
 
         private StringBuilder resultToString;
@@ -174,7 +174,11 @@ namespace UIK_writer_calc
         public string OfficeAddrToString()
         {
             resultToString.Clear();
-            resultToString.Append(place_addr_o).Append(", ").Append(street_addr_o).Append(", ").Append(building_addr_o);
+            //resultToString.Append(place_addr_o).Append(", ").Append(street_addr_o).Append(", ").Append(building_addr_o);
+            if (place_addr_o != null) resultToString.Append(place_addr_o).Append(", ");
+            if (street_addr_o != null) resultToString.Append(street_addr_o).Append(", ");
+            if (building_addr_o != null) resultToString.Append(building_addr_o).Append(", ");
+            if (resultToString.Length > 1) resultToString.Length -= 2;
             return resultToString.ToString();
         }
 
@@ -191,7 +195,11 @@ namespace UIK_writer_calc
         public string VisitAddrToString()
         {
             resultToString.Clear();
-            resultToString.Append(place_addr_v).Append(", ").Append(street_addr_v).Append(", ").Append(building_addr_v);
+            //resultToString.Append(place_addr_v).Append(", ").Append(street_addr_v).Append(", ").Append(building_addr_v);
+            if (place_addr_v != null) resultToString.Append(place_addr_v).Append(", ");
+            if (street_addr_v != null) resultToString.Append(street_addr_v).Append(", ");
+            if (building_addr_v != null) resultToString.Append(building_addr_v).Append(", ");
+            if (resultToString.Length > 1) resultToString.Length -= 2;
             return resultToString.ToString();
         }
 

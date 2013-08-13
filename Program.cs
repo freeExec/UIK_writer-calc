@@ -12,17 +12,17 @@ namespace UIK_writer_calc
     {
         static void Main(string[] args)
         {
-            //ExtractFromTable_odt(@"fixed_addr\barysh_2706.odt", 6, 3, 1, 4, 5, false);
-            //ExtractFromTable_odt(@"fixed_addr\bazarnyy_2_version.odt", 6, 3, 1, 4, 5, false);
-            //ExtractFromTable_odt(@"fixed_addr\veshkayma.odt", 6, 2, 1, 4, 5, false);
-            ExtractFromTable_odt(@"fixed_addr\inza0107.odt", 6, 2, 1, 4, 5, true);
-
+            //ExtractFromTable_odt(@"fixed_addr\barysh_2706.odt", 6, 3, 1, 4, 5);
+            //ExtractFromTable_odt(@"fixed_addr\bazarnyy_2_version.odt", 6, 3, 1, 4, 5);
+            //ExtractFromTable_odt(@"fixed_addr\veshkayma.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"fixed_addr\inza0107.odt", 6, 2, 1, 4, 5);
+            ExtractFromTable_odt(@"karsun.odt", 6, 2, 1, 4, 5);
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
         }
         
-        static void ExtractFromTable_odt(string fileName, int tableColumns, int skipFirstRows, int columnUIK_id, int columnAddresOffice, int columnAddresVisit, bool separatePI)
+        static void ExtractFromTable_odt(string fileName, int tableColumns, int skipFirstRows, int columnUIK_id, int columnAddresOffice, int columnAddresVisit)
         {
             TextDocument dt = new TextDocument();
             dt.Load(fileName);
@@ -52,7 +52,7 @@ namespace UIK_writer_calc
                 ext.FillId(row.Cells[columnUIK_id].Node.InnerText);
                                 
                 // офис
-                string test_extract = NodeToString(row.Cells[columnAddresOffice].Node, separatePI);
+                string test_extract = NodeToString(row.Cells[columnAddresOffice].Node);
 
                 ext.FillAddress(test_extract, Extract.Place.office);
 
@@ -68,7 +68,7 @@ namespace UIK_writer_calc
 
                 // место голосования
 
-                test_extract = NodeToString(row.Cells[columnAddresVisit].Node, separatePI);
+                test_extract = NodeToString(row.Cells[columnAddresVisit].Node);
                 ext.FillAddress(test_extract, Extract.Place.visit);
 
                 Console.ForegroundColor = ConsoleColor.White;
@@ -93,11 +93,11 @@ namespace UIK_writer_calc
             writerCsv.Close();            
         }
 
-        static string NodeToString(XmlNode nodeCell, bool separatePI)
+        static string NodeToString(XmlNode nodeCell)
         {
             string test_extract = string.Empty;
-            // разделение текста через новые строчки
-            if (separatePI && nodeCell.ChildNodes.Count > 1)
+            // разделение текста через новые строчки, клеим их в одну строку
+            if (nodeCell.ChildNodes.Count > 1)
             {
                 StringBuilder builder_extract = new StringBuilder(512);
                 foreach (XmlNode node in nodeCell.ChildNodes)
