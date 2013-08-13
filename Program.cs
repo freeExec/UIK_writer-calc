@@ -18,7 +18,7 @@ namespace UIK_writer_calc
             ExtractFromTable_odt(@"fixed_addr\inza0107.odt", 6, 2, 1, 4, 5, true);
 
 
-
+            Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
         }
         

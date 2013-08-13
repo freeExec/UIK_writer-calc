@@ -29,7 +29,7 @@ namespace UIK_writer_calc
 
 
         private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д" };
-        private static string[] street_prefix = { "ул.", "пл.", "пер." };
+        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок" };
         private static string[] building_prefix = { "д." };
         private static string[] phone_prefix = { "т.", "тел." };
 
@@ -90,6 +90,27 @@ namespace UIK_writer_calc
                             processed_split = true;
                             lastRecogSplit = spl;
                             break;
+                        }
+                    }
+
+                    // если между улицой и дома нет разделителя, не работает если буква в адресе
+                    if (test_split.Length > 4)
+                    {
+                        int last_char = test_split.Length - 1;
+                        while (test_split[last_char] >= '0' && test_split[last_char] <= '9') { last_char--; }
+                        if (last_char != test_split.Length - 1)
+                        {
+                            string build_addr = test_split.Substring(last_char).TrimStart(' ');
+                            if (place == Place.visit)
+                            {
+                                building_addr_v = build_addr;
+                                street_addr_v = street_addr_v.Remove(last_char);
+                            } else
+                            {
+                                building_addr_o = build_addr;
+                                street_addr_o = street_addr_o.Remove(last_char);
+                            }
+
                         }
                     }
                     if (processed_split) continue;
