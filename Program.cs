@@ -12,13 +12,29 @@ namespace UIK_writer_calc
     {
         static void Main(string[] args)
         {
-            //ExtractFromTable_odt(@"fixed_addr\barysh_2706.odt", 6, 3, 1, 4, 5);
-            //ExtractFromTable_odt(@"fixed_addr\bazarnyy_2_version.odt", 6, 3, 1, 4, 5);
-            //ExtractFromTable_odt(@"fixed_addr\veshkayma.odt", 6, 2, 1, 4, 5);
-            //ExtractFromTable_odt(@"fixed_addr\inza0107.odt", 6, 2, 1, 4, 5);
-            //ExtractFromTable_odt(@"karsun.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"barysh_2706.odt", 6, 3, 1, 4, 5);
+            //ExtractFromTable_odt(@"bazarnyy_2_version.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"veshkayma.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"inza0107.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"karsun.odt", 6, 1, 1, 4, 5);
             //ExtractFromTable_odt(@"kuz_uchastki28.odt", 6, 2, 1, 4, 5);
-            ExtractFromTable_odt(@"mayna_1.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"mayna_1.odt", 6, 0, 1, 4, 5);
+            //ExtractFromTable_odt(@"nikolaevka_2_version.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"novomal.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"pavlovka_0107.odt", 6, 1, 1, 4, 5);
+            //ExtractFromTable_odt(@"novospasskiy.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"radischevo.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"sengileevskiy.odt", 6, 1, 1, 4, 5);
+            //ExtractFromTable_odt(@"kulatka.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"st_uch28.odt", 6, 1, 1, 4, 5);
+            //ExtractFromTable_odt(@"surskiy.odt", 6, 1, 1, 4, 5);
+            //ExtractFromTable_odt(@"terenga.odt", 6, 1, 1, 4, 5);
+            //ExtractFromTable_odt(@"ulbyanovskiy_rayon.odt", 6, 1, 1, 4, 5);
+            //ExtractFromTable_odt(@"cylna.odt", 8, 2, 1, 6, 7);
+            //ExtractFromTable_odt(@"tcherdaklinskiy_1008_3_version.odt", 6, 1, 1, 4, 5);
+
+
+
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
@@ -87,7 +103,7 @@ namespace UIK_writer_calc
                 writerCsv.WriteLine(ext.GetRow());
 
                 printRow++;
-                if (printRow % 16 == 0) Console.ReadKey();
+                if (printRow % 8 == 0) Console.ReadKey();
             }
 
             dt.Dispose();

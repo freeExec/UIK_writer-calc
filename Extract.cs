@@ -28,10 +28,10 @@ namespace UIK_writer_calc
         private string phone_o;
 
 
-        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция" };
-        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок" };
+        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция", "село", "ст." };
+        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица" };
         private static string[] building_prefix = { "д.", "дом" };
-        private static string[] phone_prefix = { "т.", "тел." };
+        private static string[] phone_prefix = { "т.", "тел.", "телефон:", "тел:" };
 
         private StringBuilder resultToString;
 
@@ -94,7 +94,7 @@ namespace UIK_writer_calc
                     }
 
                     // если между улицой и дома нет разделителя, не работает если буква в адресе
-                    if (test_split.Length > 4)
+                    if (processed_split && test_split.Length > 4)
                     {
                         int last_char = test_split.Length - 1;
                         while (test_split[last_char] >= '0' && test_split[last_char] <= '9') { last_char--; }
