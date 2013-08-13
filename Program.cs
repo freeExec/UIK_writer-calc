@@ -5,6 +5,7 @@ using AODL.Document.Content.Tables;
 using AODL.Document.Content;
 using System.IO;
 using System.Xml;
+using AODL.Document.Content.Text;
 
 namespace UIK_writer_calc
 {
@@ -32,12 +33,94 @@ namespace UIK_writer_calc
             //ExtractFromTable_odt(@"ulbyanovskiy_rayon.odt", 6, 1, 1, 4, 5);
             //ExtractFromTable_odt(@"cylna.odt", 8, 2, 1, 6, 7);
             //ExtractFromTable_odt(@"tcherdaklinskiy_1008_3_version.odt", 6, 1, 1, 4, 5);
-
+            ExtractFromText_odt(@"1_zd.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
 
 
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
+        }
+
+        static string foundUIK = "Избирательный участок №";
+        static int foundUIK_len = foundUIK.Length;
+
+        static string found_addr_o = "Место нахождения УИК ";
+        static int found_addr_o_len = found_addr_o.Length;
+
+        static string found_place_v = "Помещение для голосования ";
+        static int found_place_v_len = found_place_v.Length;
+
+        static void ExtractFromText_odt(string fileName, string addr_town)
+        {
+            TextDocument dt = new TextDocument();
+            dt.Load(fileName);
+            Console.WriteLine();
+
+            ExportAndLog export_log = new ExportAndLog(Path.ChangeExtension(fileName, "csv"));
+
+            Paragraph paragraph = null;
+            Extract ext = null;
+            foreach (IContent content in dt.Content)
+            {
+                paragraph = content as Paragraph;
+                if (paragraph != null)
+                {
+                    string test_text = paragraph.Node.InnerText;
+
+                    if (test_text.StartsWith(foundUIK))
+                    {
+                        if (ext != null)
+                        {
+                            export_log.LogOffice(ext);
+                            export_log.LogVisit(ext);
+                            export_log.Export(ext);
+                            Console.WriteLine();
+                        }
+
+                        ext = new Extract();
+
+                        int foundNum = foundUIK_len + 1;
+                        while (test_text[foundNum] == ' ') { foundNum++; }
+                        ext.FillId(test_text.Substring(foundNum));
+                        continue;
+                    }
+
+                    if (ext != null && ext.HaveUikId && test_text.StartsWith(found_addr_o))
+                    {
+                        int foundAddr = found_addr_o_len + 1;
+                        while (test_text[foundAddr] == ' ') { foundAddr++; }
+                        test_text = test_text.Substring(foundAddr);
+
+                        test_text = ExtractTextInbrackets(test_text);
+
+                        ext.FillAddress(test_text, Extract.Place.office);
+                        if (!ext.FullAddressOffice && ext.SomethingAddressOffice) ext.SetAddrPlace(addr_town, Extract.Place.office);
+                    }
+
+                    if (ext != null && ext.HaveUikId && test_text.StartsWith(found_place_v))
+                    {
+                        int foundPlace = found_place_v_len + 1;
+                        while (test_text[foundPlace] == ' ') { foundPlace++; }
+                        test_text = test_text.Substring(foundPlace);
+
+                        test_text = ExtractTextInbrackets(test_text);
+
+                        ext.FillAddress(test_text, Extract.Place.visit);
+                        if (!ext.FullAddressVisit && ext.SomethingAddressVisit) ext.SetAddrPlace(addr_town, Extract.Place.visit);
+                    }
+
+                }
+            }
+
+            if (ext != null)
+            {
+                export_log.LogOffice(ext);
+                export_log.LogVisit(ext);
+                export_log.Export(ext);
+                Console.WriteLine();
+            }
+            dt.Dispose();
+            export_log.Dispose();
         }
         
         static void ExtractFromTable_odt(string fileName, int tableColumns, int skipFirstRows, int columnUIK_id, int columnAddresOffice, int columnAddresVisit)
@@ -46,8 +129,7 @@ namespace UIK_writer_calc
             dt.Load(fileName);
             Console.WriteLine();
 
-            StreamWriter writerCsv = new StreamWriter(Path.ChangeExtension(fileName, "csv"));
-            writerCsv.WriteLine(Extract.GetHeader());
+            ExportAndLog export_log = new ExportAndLog(Path.ChangeExtension(fileName, "csv"));
 
             Table table = null;
             foreach (IContent content in dt.Content)
@@ -74,50 +156,33 @@ namespace UIK_writer_calc
 
                 ext.FillAddress(test_extract, Extract.Place.office);
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("++  " + test_extract);
-                Console.WriteLine(">>  " + ext.UikToString());
-
-                Console.ForegroundColor = ext.FullAddressOffice ? ConsoleColor.Yellow : ConsoleColor.Red;
-                Console.WriteLine(">>  " + ext.OfficeAddrToString());                
-                Console.ForegroundColor = ConsoleColor.Gray;
-
-                Console.WriteLine(">>  " + ext.OfficePlaceToString());
+                export_log.LogOffice(ext);
 
                 // место голосования
 
                 test_extract = NodeToString(row.Cells[columnAddresVisit].Node);
                 ext.FillAddress(test_extract, Extract.Place.visit);
-
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("++  " + test_extract);
-
-                Console.ForegroundColor = ext.FullAddressVisit ? ConsoleColor.Yellow : ConsoleColor.Red;
-                Console.WriteLine(">>  " + ext.VisitAddrToString());
-                Console.ForegroundColor = ConsoleColor.Gray;
-
-                Console.WriteLine(">>  " + ext.VisitPlaceToString());
                 
                 Console.WriteLine();
 
-                writerCsv.WriteLine(ext.GetRow());
+                export_log.Export(ext);
 
                 printRow++;
                 if (printRow % 8 == 0) Console.ReadKey();
             }
 
             dt.Dispose();
-            writerCsv.Flush();
-            writerCsv.Close();            
+            export_log.Dispose();
         }
 
+        static StringBuilder builder_extract = new StringBuilder(512);
         static string NodeToString(XmlNode nodeCell)
         {
             string test_extract = string.Empty;
             // разделение текста через новые строчки, клеим их в одну строку
             if (nodeCell.ChildNodes.Count > 1)
             {
-                StringBuilder builder_extract = new StringBuilder(512);
+                builder_extract.Clear();
                 foreach (XmlNode node in nodeCell.ChildNodes)
                 {
                     builder_extract.Append(node.InnerText);
@@ -133,6 +198,19 @@ namespace UIK_writer_calc
                 test_extract = nodeCell.InnerText;
             }
             return test_extract;
+        }
+
+        static string ExtractTextInbrackets(string test_text)
+        {
+            int open = test_text.LastIndexOf('(');
+            int close = test_text.LastIndexOf(')');
+            if (open == -1 || close == -1) return test_text;
+
+            builder_extract.Clear();
+            builder_extract.Append(test_text.Substring(open + 1, close - open - 1)).Append(',');
+            builder_extract.Append(test_text.Substring(0, open - 1));
+            builder_extract.Append(test_text.Substring(close + 1, test_text.Length - close - 1));
+            return builder_extract.ToString();
         }
     }
 }

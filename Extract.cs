@@ -27,9 +27,11 @@ namespace UIK_writer_calc
         private string phone_v;
         private string phone_o;
 
+        public string test_office;
+        public string test_visit;
 
-        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция", "село", "ст." };
-        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица" };
+        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция", "село", "ст.", "город" };
+        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица", "пр-т" };
         private static string[] building_prefix = { "д.", "дом" };
         private static string[] phone_prefix = { "т.", "тел.", "телефон:", "тел:" };
 
@@ -52,8 +54,25 @@ namespace UIK_writer_calc
             get { return place_addr_v != null && street_addr_v != null && building_addr_v != null; }
         }
 
+        public bool SomethingAddressOffice
+        {
+            get { return place_addr_o != null || street_addr_o != null || building_addr_o != null; }
+        }
+
+        public bool SomethingAddressVisit
+        {
+            get { return place_addr_v != null || street_addr_v != null || building_addr_v != null; }
+        }
+
+        public bool HaveUikId
+        {
+            get { return uik_id != 0; }
+        }
+
         public void FillAddress(string text, Place place)
         {
+            if (place == Place.visit) test_visit = text; else test_office = text;
+
             string[] splits = text.Split(',');
 
             bool processed_split = false;
@@ -64,7 +83,9 @@ namespace UIK_writer_calc
                 processed_split = false;
 
                 // населенные пункт
-                if (place_addr_o == null && place == Place.office || place_addr_v == null && place == Place.visit)
+                if ((place_addr_o == null && place == Place.office || place_addr_v == null && place == Place.visit)
+                    //&& test_split.Length > 5)   // небольшая защита от дома (д.) в том случае если указана только улица и номер дома
+                    && (street_addr_o == null && place == Place.office || street_addr_v == null && place == Place.visit))
                 {
                     for (int pref = 0; pref < place_prefix.Length; pref++)
                     {
@@ -131,7 +152,8 @@ namespace UIK_writer_calc
                     }
                     // попытка пофиксить багу отсутствия префикса дом.
                     if (test_split.Length > 0
-                        && (building_addr_o == null && place == Place.office || building_addr_v == null && place == Place.visit)
+                        //&& (building_addr_o == null && place == Place.office || building_addr_v == null && place == Place.visit)
+                        && lastRecogSplit != -1     // было найдено или НП или улица
                         && test_split[0] >= '0' && test_split[0] <= '9')
                     {
                         if (place == Place.visit) building_addr_v = test_split; else building_addr_o = test_split;
@@ -241,6 +263,29 @@ namespace UIK_writer_calc
             rowResultToString.Append(";");
 
             return rowResultToString.ToString();
+        }
+
+        public void Clear(Place place)
+        {
+            throw new NotImplementedException();
+            
+            if (place == Place.office)
+            {
+                place_addr_v = null;
+                street_addr_v = null;
+                building_addr_v = null;
+
+            }
+            else
+            {
+
+
+            }
+        }
+
+        public void SetAddrPlace(string addr, Place place)
+        {
+            if (place == Place.office) place_addr_o = addr; else place_addr_v = addr;
         }
     }
 }
