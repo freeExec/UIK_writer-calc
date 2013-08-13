@@ -28,7 +28,7 @@ namespace UIK_writer_calc
         private string phone_o;
 
 
-        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д" };
+        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция" };
         private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок" };
         private static string[] building_prefix = { "д.", "дом" };
         private static string[] phone_prefix = { "т.", "тел." };
@@ -140,7 +140,7 @@ namespace UIK_writer_calc
                     }
                     if (processed_split) continue;
                 }
-
+                break;
             }
 
             resultToString.Clear();

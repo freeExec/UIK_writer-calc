@@ -16,7 +16,9 @@ namespace UIK_writer_calc
             //ExtractFromTable_odt(@"fixed_addr\bazarnyy_2_version.odt", 6, 3, 1, 4, 5);
             //ExtractFromTable_odt(@"fixed_addr\veshkayma.odt", 6, 2, 1, 4, 5);
             //ExtractFromTable_odt(@"fixed_addr\inza0107.odt", 6, 2, 1, 4, 5);
-            ExtractFromTable_odt(@"karsun.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"karsun.odt", 6, 2, 1, 4, 5);
+            //ExtractFromTable_odt(@"kuz_uchastki28.odt", 6, 2, 1, 4, 5);
+            ExtractFromTable_odt(@"mayna_1.odt", 6, 2, 1, 4, 5);
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
