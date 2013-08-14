@@ -30,8 +30,8 @@ namespace UIK_writer_calc
         public string test_office;
         public string test_visit;
 
-        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция", "село", "ст.", "город" };
-        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица", "пр-т", "пр." };
+        private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция", "село", "ст.", "город", "посёлок" };
+        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица", "пр-т", "пр.", "пр-д", "б-р" };
         private static string[] building_prefix = { "д.", "дом" };
         private static string[] phone_prefix = { "т.", "тел.:", "тел.", "телефон:", "тел:" };
 
@@ -62,6 +62,16 @@ namespace UIK_writer_calc
         public bool SomethingAddressVisit
         {
             get { return place_addr_v != null || street_addr_v != null || building_addr_v != null; }
+        }
+
+        public bool ExistsAddressPlaceOffice
+        {
+            get { return place_addr_o != null; }
+        }
+
+        public bool ExistsAddressPlaceVisit
+        {
+            get { return place_addr_v != null; }
         }
 
         public bool HaveUikId

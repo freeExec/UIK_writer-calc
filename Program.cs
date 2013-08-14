@@ -35,7 +35,10 @@ namespace UIK_writer_calc
             //ExtractFromTable_odt(@"tcherdaklinskiy_1008_3_version.odt", 6, 1, 1, 4, 5);
             //ExtractFromText_odt(@"1_zd.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
             //ExtractFromTable_odt(@"dimitrov_11_07.odt", 6, 1, 1, 4, 5);     // есть уникальный код в NodeToString (адрес в последней строчке)
-            ExtractFromTable_odt(@"novoulbyanovsk.odt", 6, 2, 1, 4, 5);     // есть уникальный код в NodeToString и ExtractFromTable_odt (адрес в предпоследней строчке)
+            //ExtractFromTable_odt(@"novoulbyanovsk.odt", 6, 2, 1, 4, 5);     // есть уникальный код в NodeToString и ExtractFromTable_odt (адрес в предпоследней строчке)
+            //ExtractFromText_odt(@"4_len.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
+            //ExtractFromText_odt(@"2_zv.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
+            ExtractFromText_odt(@"3_zsv.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
@@ -94,7 +97,7 @@ namespace UIK_writer_calc
                         test_text = ExtractTextInbrackets(test_text);
 
                         ext.FillAddress(test_text, Extract.Place.office);
-                        if (!ext.FullAddressOffice && ext.SomethingAddressOffice) ext.SetAddrPlace(addr_town, Extract.Place.office);
+                        if (ext.SomethingAddressOffice && !ext.ExistsAddressPlaceOffice) ext.SetAddrPlace(addr_town, Extract.Place.office);
                     }
 
                     if (ext != null && ext.HaveUikId && test_text.StartsWith(found_place_v))
@@ -106,7 +109,7 @@ namespace UIK_writer_calc
                         test_text = ExtractTextInbrackets(test_text);
 
                         ext.FillAddress(test_text, Extract.Place.visit);
-                        if (!ext.FullAddressVisit && ext.SomethingAddressVisit) ext.SetAddrPlace(addr_town, Extract.Place.visit);
+                        if (ext.SomethingAddressVisit && !ext.ExistsAddressPlaceVisit) ext.SetAddrPlace(addr_town, Extract.Place.visit);
                     }
 
                 }
