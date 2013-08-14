@@ -38,7 +38,8 @@ namespace UIK_writer_calc
             //ExtractFromTable_odt(@"novoulbyanovsk.odt", 6, 2, 1, 4, 5);     // есть уникальный код в NodeToString и ExtractFromTable_odt (адрес в предпоследней строчке)
             //ExtractFromText_odt(@"4_len.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
             //ExtractFromText_odt(@"2_zv.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
-            ExtractFromText_odt(@"3_zsv.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
+            //ExtractFromText_odt(@"3_zsv.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
+            ExtractFromTable_odt(@"melekess.odt", 6, 2, 1, 4, 5);
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();

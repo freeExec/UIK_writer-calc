@@ -270,7 +270,6 @@ namespace UIK_writer_calc
             rowResultToString.Append(OfficePhoneToString()).Append(";");
 
             rowResultToString.Append(FullAddressVisit).Append(" / ").Append(FullAddressOffice).Append(";");
-            rowResultToString.Append(";");
 
             return rowResultToString.ToString();
         }
