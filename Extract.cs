@@ -31,9 +31,9 @@ namespace UIK_writer_calc
         public string test_visit;
 
         private static string[] place_prefix = { "г.", "п.", "р.п.", "с.", "пос.", "д.", "р-д", "станция", "село", "ст.", "город" };
-        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица", "пр-т" };
+        private static string[] street_prefix = { "ул.", "пл.", "пер.", "переулок", "площадь", "улица", "пр-т", "пр." };
         private static string[] building_prefix = { "д.", "дом" };
-        private static string[] phone_prefix = { "т.", "тел.", "телефон:", "тел:" };
+        private static string[] phone_prefix = { "т.", "тел.:", "тел.", "телефон:", "тел:" };
 
         private StringBuilder resultToString;
 

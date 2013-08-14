@@ -33,9 +33,9 @@ namespace UIK_writer_calc
             //ExtractFromTable_odt(@"ulbyanovskiy_rayon.odt", 6, 1, 1, 4, 5);
             //ExtractFromTable_odt(@"cylna.odt", 8, 2, 1, 6, 7);
             //ExtractFromTable_odt(@"tcherdaklinskiy_1008_3_version.odt", 6, 1, 1, 4, 5);
-            ExtractFromText_odt(@"1_zd.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
-
-
+            //ExtractFromText_odt(@"1_zd.odt", "город Ульяновск");    // именно городской округ, т.к. адреса идут по улица в деревнях округа
+            //ExtractFromTable_odt(@"dimitrov_11_07.odt", 6, 1, 1, 4, 5);     // есть уникальный код в NodeToString (адрес в последней строчке)
+            ExtractFromTable_odt(@"novoulbyanovsk.odt", 6, 2, 1, 4, 5);     // есть уникальный код в NodeToString и ExtractFromTable_odt (адрес в предпоследней строчке)
 
             Console.WriteLine("Complite. Pres any key");
             Console.ReadKey();
@@ -155,14 +155,14 @@ namespace UIK_writer_calc
                 string test_extract = NodeToString(row.Cells[columnAddresOffice].Node);
 
                 ext.FillAddress(test_extract, Extract.Place.office);
-
+                //if (!ext.FullAddressOffice && ext.SomethingAddressOffice) ext.SetAddrPlace("г. Новоульяновк", Extract.Place.office);    // новоульяновск
                 export_log.LogOffice(ext);
 
                 // место голосования
 
                 test_extract = NodeToString(row.Cells[columnAddresVisit].Node);
                 ext.FillAddress(test_extract, Extract.Place.visit);
-                
+                //if (!ext.FullAddressVisit && ext.SomethingAddressVisit) ext.SetAddrPlace("г. Новоульяновк", Extract.Place.visit);       // новоульяновск
                 Console.WriteLine();
 
                 export_log.Export(ext);
@@ -179,12 +179,19 @@ namespace UIK_writer_calc
         static string NodeToString(XmlNode nodeCell)
         {
             string test_extract = string.Empty;
+            //int dimitrovgrad_last_pi = 0;                               // димитровград
+            //int novul_last_pi = 0;                                              // новоульяновск
+            //int novul_prelast_pi = 0;                                           // новоульяновск
             // разделение текста через новые строчки, клеим их в одну строку
             if (nodeCell.ChildNodes.Count > 1)
             {
                 builder_extract.Clear();
                 foreach (XmlNode node in nodeCell.ChildNodes)
                 {
+                    //if (node.InnerText.Length > 0) dimitrovgrad_last_pi = builder_extract.Length;      // димитровград
+                    //if (node.InnerText.Length > 0 && novul_last_pi != 0) novul_prelast_pi = novul_last_pi;              // новоульяновск
+                    //if (node.InnerText.Length > 0) novul_last_pi = builder_extract.Length;                              // новоульяновск
+
                     builder_extract.Append(node.InnerText);
                     while (builder_extract[builder_extract.Length - 1] == ' '
                             || builder_extract[builder_extract.Length - 1] == ','
@@ -197,6 +204,23 @@ namespace UIK_writer_calc
             {
                 test_extract = nodeCell.InnerText;
             }
+
+            // для Димитровград: добавить город в начало, адрес лежит в последней строчке ячейки
+            /*int len = builder_extract.Length - dimitrovgrad_last_pi;
+            builder_extract.Insert(0, builder_extract.ToString().Substring(dimitrovgrad_last_pi));
+            builder_extract.Insert(len, ',');
+            builder_extract.Length -= len +1;
+            builder_extract.Insert(0, "г. Димитровград,");
+            test_extract = builder_extract.ToString();*/
+            // конец Димитровград
+
+            // для Новоульяновк: добавить город в начало, адрес лежит в предпоследней строчке ячейки
+            /*int len = novul_last_pi - novul_prelast_pi;
+            builder_extract.Insert(0, builder_extract.ToString().Substring(novul_prelast_pi, len));
+            builder_extract.Remove(novul_prelast_pi + len, len);
+            test_extract = builder_extract.ToString();*/
+            // конец Новоульяновк
+
             return test_extract;
         }
 

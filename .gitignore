@@ -4,3 +4,4 @@
 /MSVC11/obj
 
 test/
+*.suo
